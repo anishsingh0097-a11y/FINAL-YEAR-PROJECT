@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login - TechCorp Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --secondary: #00CCFF;
+            --bg: #0A0E1A;
+            --surface: #141824;
+            --surface-2: #1C2130;
+            --text: #FFFFFF;
+            --text-2: #A0A7B8;
+            --text-3: #6B7280;
+            --border: #2A3142;
+            --error: #FF4444;
+            --success: #00D67B;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-pattern {
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0,102,255,.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0,204,255,.1) 0%, transparent 50%);
+        }
+        .bg-pattern::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.015) 2px, rgba(255,255,255,.015) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,.015) 2px, rgba(255,255,255,.015) 4px);
+            animation: patternMove 30s linear infinite;
+        }
+        @keyframes patternMove { to { transform: translate(50px, 50px); } }
+        .container {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 440px;
+            padding: 24px;
+            animation: fadeUp .6s ease-out;
+        }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(20px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .header { text-align: center; margin-bottom: 32px; }
+        .logo-wrap { margin-bottom: 16px; display: inline-block; }
+        .logo-wrap svg { filter: drop-shadow(0 4px 24px rgba(0,102,255,.4)); }
+        .company-name {
+            font-size: 32px; font-weight: 600; margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .tagline { color: var(--text-2); font-size: 14px; }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        .card-title { font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+        .card-sub { color: var(--text-2); font-size: 14px; margin-bottom: 28px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        .input-wrap { position: relative; }
+        .input-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-3); pointer-events: none; transition: color .2s; }
+        input[type=text], input[type=password] {
+            width: 100%; padding: 14px 16px 14px 44px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px; color: var(--text);
+            font-family: inherit; transition: all .25s;
+        }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,102,255,.12); background: var(--surface); }
+        input::placeholder { color: var(--text-3); }
+        .opts { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .remember { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); cursor: pointer; }
+        .remember input { width: 16px; height: 16px; accent-color: var(--primary); }
+        .forgot { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 500; }
+        .forgot:hover { color: var(--secondary); }
+        .btn-login {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none; border-radius: 10px;
+            color: white; font-size: 15px; font-weight: 600;
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: all .3s;
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,102,255,.35); }
+        .btn-login:active { transform: none; }
+        .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; color: var(--text-3); font-size: 13px; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .btn-social {
+            width: 100%; padding: 12px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text); font-size: 14px; font-weight: 500;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-bottom: 10px; transition: all .2s;
+        }
+        .btn-social:hover { border-color: var(--primary); background: var(--surface); transform: translateY(-1px); }
+        .alert { padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-top: 16px; }
+        .alert.error { background: rgba(255,68,68,.1); border: 1px solid rgba(255,68,68,.3); color: var(--error); }
+        .footer { text-align: center; margin-top: 28px; color: var(--text-3); font-size: 13px; }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-top: 10px; }
+        .footer-links a { color: var(--text-2); text-decoration: none; font-size: 13px; }
+        .footer-links a:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="container">
+        <div class="header">
+            <div class="logo-wrap">
+                <svg width="52" height="52" viewBox="0 0 48 48" fill="none">
+                    <rect width="48" height="48" rx="12" fill="url(#g1)"/>
+                    <path d="M24 14L34 20V28L24 34L14 28V20L24 14Z" fill="white" opacity=".9"/>
+                    <path d="M24 20L29 23V27L24 30L19 27V23L24 20Z" fill="white" opacity=".55"/>
+                    <defs>
+                        <linearGradient id="g1" x1="0" y1="0" x2="48" y2="48">
+                            <stop offset="0%" stop-color="#0066FF"/>
+                            <stop offset="100%" stop-color="#00CCFF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1 class="company-name">TechCorp</h1>
+            <p class="tagline">Enterprise Management Portal</p>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Sign In</h2>
+            <p class="card-sub">Access your secure workspace</p>
+
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrap">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 9a7 7 0 1114 0H3z"/>
+                        </svg>
+                        <input type="text" id="username" name="username"
+                               placeholder="Enter your username" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrap">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"/>
+                        </svg>
+                        <input type="password" id="password" name="password"
+                               placeholder="Enter your password" required>
+                    </div>
+                </div>
+                <div class="opts">
+                    <label class="remember">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+
+            <div class="divider"><span>or</span></div>
+            <button class="btn-social">
+                <svg width="18" height="18" viewBox="0 0 20 20">
+                    <path fill="#4285F4" d="M19.6 10.23c0-.82-.07-1.43-.21-2.05H10v3.72h5.51c-.11.87-.72 2.18-2.07 3.06l3.01 2.33C18.5 15.68 19.6 13.11 19.6 10.23z"/>
+                    <path fill="#34A853" d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.19-2.48c-.86.58-1.97.98-3.43.98-2.62 0-4.84-1.76-5.63-4.12L1.24 14.31C2.66 17.63 6.09 20 10 20z"/>
+                    <path fill="#FBBC05" d="M4.37 11.96C4.17 11.38 4.05 10.75 4.05 10s.12-1.38.32-1.96L1.24 5.69C.39 7.07 0 8.48 0 10s.39 2.93 1.07 4.31l3.3-2.35z"/>
+                    <path fill="#EB4335" d="M10 3.98c1.86 0 3.12.8 3.84 1.47l2.84-2.77C14.95.99 12.7 0 10 0 6.09 0 2.66 2.37 1.07 5.69l3.28 2.55C5.16 5.75 7.38 3.98 10 3.98z"/>
+                </svg>
+                Sign in with Google
+            </button>
+            <button class="btn-social">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 0C4.477 0 0 4.477 0 10c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z"/>
+                </svg>
+                Sign in with GitHub
+            </button>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 TechCorp Inc. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Help Center</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

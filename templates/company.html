@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCorp - Internal Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: linear-gradient(160deg, #3155b7 0%, #E8F0FF 100%);
+            min-height: 100vh; color: #102A43;
+        }
+        nav {
+            background: white; border-bottom: 1px solid rgba(15,23,42,.08);
+            padding: 0 32px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(15,23,42,.04);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-logo {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: linear-gradient(135deg, #2F6BFF, #00B8D9);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 15px;
+        }
+        .nav-brand span { font-size: 18px; font-weight: 700; color: #102A43; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .nav-user {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 14px; color: #627D98;
+        }
+        .avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: linear-gradient(135deg, #2F6BFF, #00B8D9);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 600; font-size: 13px;
+        }
+        .main { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+        .welcome {
+            background: white; border-radius: 20px; padding: 36px 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 24px rgba(15,23,42,.06);
+            border: 1px solid rgba(15,23,42,.05);
+            display: flex; align-items: center; gap: 24px;
+        }
+        .welcome-icon {
+            width: 64px; height: 64px; border-radius: 18px;
+            background: linear-gradient(135deg, #2F6BFF, #00B8D9);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; flex-shrink: 0;
+        }
+        .welcome h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+        .badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #E6F4EA; color: #1E7E3A;
+            padding: 6px 14px; border-radius: 999px;
+            font-size: 13px; font-weight: 600;
+            margin-top: 8px;
+        }
+        .badge svg { width: 14px; height: 14px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card {
+            background: white; border-radius: 18px; padding: 28px;
+            border: 1px solid rgba(15,23,42,.07);
+            box-shadow: 0 4px 16px rgba(15,23,42,.05);
+            text-decoration: none; color: #102A43;
+            transition: all .25s;
+            display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(47,107,255,.1); border-color: rgba(47,107,255,.2); }
+        .card-icon { font-size: 32px; margin-bottom: 16px; }
+        .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .card p { font-size: 14px; color: #627D98; line-height: 1.6; }
+        .footer-note { text-align: center; color: #829AB1; font-size: 13px; margin-top: 36px; }
+        @media(max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">TC</div>
+            <span>TechCorp Portal</span>
+        </div>
+        <div class="nav-right">
+            <div class="nav-user">
+                <div class="avatar">TCP</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main">
+        <div class="welcome">
+            <div class="welcome-icon">🏢</div>
+            <div>
+                <h1>TechCorp Portal</h1>
+                <p style="color:#627D98; font-size:14px;">Modern tech company workspace with developers coding, futuristic screens, collaboration, innovation, clean office, cinematic lighting, ultra realistic.</p>
+                
+            </div>
+        </div>
+
+        <div class="grid">
+            <a href="/data" class="card" onclick="track('Clicked Confidential Data')">
+                <div class="card-icon">📊</div>
+                <h3>Confidential Data</h3>
+            </a>
+            <a href="./employees" class="card" onclick="track('Clicked Employee Portal')">
+                <div class="card-icon">👥</div>
+                <h3>Employee Portal</h3>
+            </a>
+            <a href="/projects" class="card" onclick="track('Clicked Projects')">
+                <div class="card-icon">💼</div>
+                <h3>Active Projects</h3>
+            </a>
+            <a href="/settings" class="card" onclick="track('Clicked Settings')">
+                <div class="card-icon">⚙️</div>
+                <h3>System Settings</h3>
+            </a>
+        </div>
+
+        <p class="footer-note">© 2026 TechCorp Inc. ANISH KUMAR SINGH</p>
+    </div>
+
+    <script>
+        function track(action) {
+            fetch('/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action })
+            });
+        }
+    </script>
+</body>
+</html>

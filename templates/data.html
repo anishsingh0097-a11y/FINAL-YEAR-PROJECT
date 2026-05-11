@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confidential Data - TechCorp</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: #0a0e1a; color: #00ff88;
+            min-height: 100vh; padding: 40px 20px;
+        }
+        .terminal {
+            background: #070b14;
+            border: 1px solid #00ff88;
+            border-radius: 12px;
+            max-width: 960px; margin: 0 auto;
+            box-shadow: 0 0 40px rgba(0,255,136,.15), inset 0 0 40px rgba(0,0,0,.5);
+            overflow: hidden;
+        }
+        .term-bar {
+            background: #111827;
+            padding: 12px 20px;
+            border-bottom: 1px solid #1a2535;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.r { background: #ff5f56; }
+        .dot.y { background: #ffbd2e; }
+        .dot.g { background: #27c93f; }
+        .term-title { flex: 1; text-align: center; font-size: 13px; color: #4b6584; font-family: 'JetBrains Mono', monospace; }
+        .term-body { padding: 28px 32px; font-family: 'JetBrains Mono', monospace; }
+        .prompt { color: #4b6584; font-size: 13px; margin-bottom: 20px; }
+        .prompt span { color: #00ff88; }
+        .warn-box {
+            border: 1px solid #ff4444;
+            background: rgba(255,68,68,.07);
+            color: #ff8080; padding: 14px 18px;
+            border-radius: 8px; margin-bottom: 28px;
+            font-size: 13px; line-height: 1.6;
+        }
+        .section { margin-bottom: 32px; }
+        .section-title {
+            color: #00ccff; font-size: 13px; font-weight: 600;
+            margin-bottom: 14px; border-bottom: 1px solid #0d2a3d;
+            padding-bottom: 8px;
+        }
+        .row {
+            display: flex; justify-content: space-between;
+            padding: 9px 0; border-bottom: 1px dashed #0d1e2e;
+            font-size: 13px;
+        }
+        .row:last-child { border-bottom: none; }
+        .lbl { color: #ffd700; width: 200px; flex-shrink: 0; }
+        .val { color: #00ff88; }
+        .val.blink { animation: blink 1.2s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .badge-classified {
+            display: inline-block;
+            background: rgba(255,0,0,.2); color: #ff4444;
+            padding: 2px 8px; border-radius: 4px;
+            font-size: 10px; letter-spacing: 1px; margin-left: 10px;
+            border: 1px solid rgba(255,68,68,.4);
+        }
+        .footer-bar {
+            text-align: center; color: #2a3d52;
+            font-size: 12px; margin-top: 28px;
+            padding-top: 20px; border-top: 1px solid #0d1e2e;
+        }
+        .footer-bar span { color: #4b6584; }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="term-bar">
+            <div class="dot r"></div>
+            <div class="dot y"></div>
+            <div class="dot g"></div>
+            <div class="term-title">TECHCORP — CONFIDENTIAL DATA ACCESS TERMINAL v2.6</div>
+        </div>
+        <div class="term-body">
+            <div class="prompt">root@techcorp-secure:~$ <span>cat /data/classified/overview.json</span></div>
+
+            <div class="section">
+                <div class="section-title">▶ CLIENT DATABASE RECORDS <span class="badge-classified">TOP SECRET</span></div>
+                <div class="row"><span class="lbl">Total Clients</span><span class="val">15</span></div>
+                <div class="row"><span class="lbl">Active Contracts</span><span class="val">$247.00</span></div>
+                <div class="row"><span class="lbl">Database Status</span><span class="val blink">● ONLINE</span></div>
+                <div class="row"><span class="lbl">Last Sync</span><span class="val" id="syncTime"></span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">▶ FINANCIAL INFORMATION <span class="badge-classified">CLASSIFIED</span></div>
+                <div class="row"><span class="lbl">Q4 Revenue</span><span class="val">$89.00</span></div>
+                <div class="row"><span class="lbl">Projected Growth</span><span class="val">+27.3% YoY</span></div>
+                <div class="row"><span class="lbl">Operating Budget</span><span class="val">$156.00</span></div>
+                <div class="row"><span class="lbl">Net Profit Margin</span><span class="val">18.4%</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">▶ EMPLOYEE RECORDS</div>
+                <div class="row"><span class="lbl">Total Employees</span><span class="val">10</span></div>
+                <div class="row"><span class="lbl">Payroll Database</span><span class="val">ENCRYPTED (AES-256)</span></div>
+                <div class="row"><span class="lbl">Benefits System</span><span class="val">ACCESSIBLE</span></div>
+                <div class="row"><span class="lbl">Active Clearances</span><span class="val">8 employees</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">▶ INTELLECTUAL PROPERTY <span class="badge-classified">RESTRICTED</span></div>
+                <div class="row"><span class="lbl">Active Patents</span><span class="val">12</span></div>
+                <div class="row"><span class="lbl">R&amp;D Projects</span><span class="val">4(CLASSIFIED)</span></div>
+                <div class="row"><span class="lbl">Trade Secrets</span><span class="val">RESTRICTED ACCESS</span></div>
+            </div>
+
+            <div class="footer-bar">
+                System monitored by TechCorp Security&nbsp;|&nbsp;
+                Session: <span id="sessId"></span> &nbsp;|&nbsp;
+                Time: <span id="accessTime"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('accessTime').textContent = new Date().toLocaleString();
+        document.getElementById('syncTime').textContent = new Date().toLocaleString();
+        document.getElementById('sessId').textContent = Math.random().toString(36).substring(2,9).toUpperCase();
+
+        function track(action) {
+            fetch('/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action })
+            });
+        }
+        track('Viewed Confidential Data Page');
+    </script>
+</body>
+</html>

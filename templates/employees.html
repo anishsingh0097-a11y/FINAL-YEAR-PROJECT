@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Records - TechCorp</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: linear-gradient(160deg, #F0F4FF 0%, #E8F0FF 100%);
+            min-height: 100vh; color: #102A43;
+        }
+
+        /* NAV */
+        nav {
+            background: white; border-bottom: 1px solid rgba(15,23,42,.08);
+            padding: 0 32px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(15,23,42,.04);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-logo {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: linear-gradient(135deg, #2F6BFF, #00B8D9);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 15px;
+        }
+        .nav-brand span { font-size: 18px; font-weight: 700; }
+        .nav-links { display: flex; gap: 6px; }
+        .nav-link {
+            padding: 7px 14px; border-radius: 8px; font-size: 14px;
+            color: #627D98; text-decoration: none; transition: all .2s;
+        }
+        .nav-link:hover { background: #F0F4FF; color: #102A43; }
+        .nav-link.active { background: #E8F0FF; color: #2F6BFF; font-weight: 600; }
+
+        /* MAIN */
+        .main { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+        /* PAGE HEADER */
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .page-header h1 { font-size: 24px; font-weight: 700; }
+        .page-header p { font-size: 14px; color: #627D98; margin-top: 3px; }
+        .header-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: #FFF3CD; color: #856404;
+            border: 1px solid #FFEAA7; border-radius: 8px;
+            padding: 8px 16px; font-size: 13px; font-weight: 600;
+        }
+
+        /* SEARCH + FILTER BAR */
+        .toolbar {
+            display: flex; gap: 12px; margin-bottom: 20px; align-items: center;
+        }
+        .search-wrap { position: relative; flex: 1; max-width: 320px; }
+        .search-wrap input {
+            width: 100%; padding: 10px 14px 10px 38px;
+            border: 1px solid #D0DAE8; border-radius: 10px;
+            font-size: 14px; font-family: inherit;
+            background: white; color: #102A43; transition: border .2s;
+        }
+        .search-wrap input:focus { outline: none; border-color: #2F6BFF; }
+        .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #829AB1; }
+        select {
+            padding: 10px 14px; border: 1px solid #D0DAE8; border-radius: 10px;
+            font-size: 14px; font-family: inherit; background: white;
+            color: #102A43; cursor: pointer;
+        }
+        .total-badge {
+            margin-left: auto; background: white; border: 1px solid #D0DAE8;
+            border-radius: 8px; padding: 8px 14px; font-size: 13px; color: #627D98;
+        }
+        .total-badge b { color: #102A43; }
+
+        /* TABLE CARD */
+        .table-card {
+            background: white; border-radius: 16px;
+            border: 1px solid rgba(15,23,42,.07);
+            box-shadow: 0 4px 20px rgba(15,23,42,.06);
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #F8FBFF; padding: 13px 18px;
+            font-size: 12px; font-weight: 600; color: #627D98;
+            text-align: left; border-bottom: 1px solid #E8F0FF;
+            text-transform: uppercase; letter-spacing: .5px;
+        }
+        tbody td { padding: 14px 18px; border-bottom: 1px solid #F0F4FF; font-size: 14px; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: #FAFCFF; }
+
+        /* Employee cell */
+        .emp-cell { display: flex; align-items: center; gap: 12px; }
+        .avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; flex-shrink: 0;
+        }
+        .emp-name { font-weight: 600; color: #102A43; }
+        .emp-id { font-size: 12px; color: #829AB1; }
+
+        /* Department badge */
+        .dept {
+            display: inline-block; padding: 3px 10px; border-radius: 999px;
+            font-size: 12px; font-weight: 500;
+        }
+        .dept-eng  { background: #EBF4FF; color: #1A56DB; }
+        .dept-hr   { background: #FDF2F8; color: #9D174D; }
+        .dept-fin  { background: #ECFDF5; color: #065F46; }
+        .dept-mkt  { background: #FFFBEB; color: #92400E; }
+        .dept-ops  { background: #F5F3FF; color: #5B21B6; }
+
+        /* Status */
+        .status { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; }
+        .status.active .status-dot { background: #22C55E; }
+        .status.active { color: #15803D; }
+        .status.leave .status-dot  { background: #F59E0B; }
+        .status.leave  { color: #B45309; }
+
+        /* Access level */
+        .access {
+            display: inline-block; padding: 3px 10px; border-radius: 6px;
+            font-size: 11px; font-weight: 600; letter-spacing: .5px;
+        }
+        .access-high { background: rgba(239,68,68,.1); color: #DC2626; border: 1px solid rgba(239,68,68,.2); }
+        .access-mid  { background: rgba(245,158,11,.1); color: #B45309; border: 1px solid rgba(245,158,11,.2); }
+        .access-low  { background: rgba(34,197,94,.1);  color: #15803D; border: 1px solid rgba(34,197,94,.2);  }
+
+        .footer-note { text-align: center; color: #829AB1; font-size: 13px; margin-top: 28px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">
+        <div class="nav-logo">TC</div>
+        <span>TechCorp Portal</span>
+    </div>
+    <div class="nav-links">
+        <a href="/company" class="nav-link">🏠 Home</a>
+        <a href="/employees" class="nav-link active">👥 Employees</a>
+    </div>
+</nav>
+
+<div class="main">
+    <div class="page-header">
+        <div>
+            <h1>👥 Employee Records</h1>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-wrap">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search employees..." oninput="filterTable()">
+        </div>
+        <select id="deptFilter" onchange="filterTable()">
+            <option value="">All Departments</option>
+            <option value="Engineering">Engineering</option>
+            <option value="HR">HR</option>
+            <option value="Finance">Finance</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operations">Operations</option>
+        </select>
+        <div class="total-badge">Total: <b id="totalCount">10</b> employees</div>
+    </div>
+
+    <div class="table-card">
+        <table id="empTable">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Access Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-dept="Engineering">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#EBF4FF;color:#1A56DB">AA</div>
+                            <div>
+                                <div class="emp-name">Aryan Anand</div>
+                                <div class="emp-id">EMP-001</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-eng">Engineering</span></td>
+                    <td>Senior Software Engineer</td>
+                    <td>aryan.anand001@gmail.com</td>
+                    <td>+91 98100 11001</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-high">HIGH</span></td>
+                </tr>
+                <tr data-dept="HR">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#FDF2F8;color:#9D174D">NT</div>
+                            <div>
+                                <div class="emp-name">Nawneet Tirkey</div>
+                                <div class="emp-id">EMP-002</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-hr">HR</span></td>
+                    <td>HR Manager</td>
+                    <td>nawneet.tirkey@gmail.com</td>
+                    <td>+91 98200 22002</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-mid">MEDIUM</span></td>
+                </tr>
+                <tr data-dept="Finance">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#ECFDF5;color:#065F46">HP</div>
+                            <div>
+                                <div class="emp-name">Hardik Pandey</div>
+                                <div class="emp-id">EMP-003</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-fin">Finance</span></td>
+                    <td>Financial Analyst</td>
+                    <td>hardik.pandey@gmail.com</td>
+                    <td>+91 99300 33003</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-high">HIGH</span></td>
+                </tr>
+                <tr data-dept="Engineering">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#EBF4FF;color:#1A56DB">AKS</div>
+                            <div>
+                                <div class="emp-name">Anish Kumar Singh</div>
+                                <div class="emp-id">EMP-004</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-eng">Engineering</span></td>
+                    <td>Frontend Developer</td>
+                    <td>anish.singh@gmail.com</td>
+                    <td>+91 97400 44004</td>
+                    <td><span class="status leave"><span class="status-dot"></span>On Leave</span></td>
+                    <td><span class="access access-low">LOW</span></td>
+                </tr>
+                <tr data-dept="Marketing">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#FFFBEB;color:#92400E">KR</div>
+                            <div>
+                                <div class="emp-name">Kalyaan Rooj</div>
+                                <div class="emp-id">EMP-005</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-mkt">Marketing</span></td>
+                    <td>Marketing Head</td>
+                    <td>kalyaan.rooj@gmail.com</td>
+                    <td>+91 96500 55005</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-mid">MEDIUM</span></td>
+                </tr>
+                <tr data-dept="Operations">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#F5F3FF;color:#5B21B6">SA</div>
+                            <div>
+                                <div class="emp-name">Samad Ansari</div>
+                                <div class="emp-id">EMP-006</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-ops">Operations</span></td>
+                    <td>Operations Manager</td>
+                    <td>samad.ansari@gmail.com</td>
+                    <td>+91 95600 66006</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-mid">MEDIUM</span></td>
+                </tr>
+                <tr data-dept="Engineering">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#EBF4FF;color:#1A56DB">AK</div>
+                            <div>
+                                <div class="emp-name">Akhilesh Kumar</div>
+                                <div class="emp-id">EMP-007</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-eng">Engineering</span></td>
+                    <td>Backend Developer</td>
+                    <td>akhilesh.kumar@gmail.com</td>
+                    <td>+91 94700 77007</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-low">LOW</span></td>
+                </tr>
+                <tr data-dept="Finance">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#ECFDF5;color:#065F46">SJ</div>
+                            <div>
+                                <div class="emp-name">Sahil Jaishwal</div>
+                                <div class="emp-id">EMP-008</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-fin">Finance</span></td>
+                    <td>Accounts Executive</td>
+                    <td>sahil.jaishwal@gmail.com</td>
+                    <td>+91 93800 88008</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-low">LOW</span></td>
+                </tr>
+                <tr data-dept="HR">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#FDF2F8;color:#9D174D">YSC</div>
+                            <div>
+                                <div class="emp-name">Yash Swapnil champi</div>
+                                <div class="emp-id">EMP-009</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-hr">HR</span></td>
+                    <td>Recruiter</td>
+                    <td>yash.swapnil@gmail.com</td>
+                    <td>+91 92900 99009</td>
+                    <td><span class="status leave"><span class="status-dot"></span>On Leave</span></td>
+                    <td><span class="access access-low">LOW</span></td>
+                </tr>
+                <tr data-dept="Marketing">
+                    <td>
+                        <div class="emp-cell">
+                            <div class="avatar" style="background:#FFFBEB;color:#92400E">AG</div>
+                            <div>
+                                <div class="emp-name">Arpit Gupta</div>
+                                <div class="emp-id">EMP-010</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="dept dept-mkt">Marketing</span></td>
+                    <td>Content Strategist</td>
+                    <td>arpit.gupta@gmail.com</td>
+                    <td>+91 91000 10010</td>
+                    <td><span class="status active"><span class="status-dot"></span>Active</span></td>
+                    <td><span class="access access-low">LOW</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="footer-note">© 2026 TechCorp Inc.</p>
+</div>
+
+<script>
+    function filterTable() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const dept   = document.getElementById('deptFilter').value;
+        const rows   = document.querySelectorAll('#empTable tbody tr');
+        let visible  = 0;
+        rows.forEach(row => {
+            const text    = row.textContent.toLowerCase();
+            const rowDept = row.getAttribute('data-dept');
+            const matchS  = text.includes(search);
+            const matchD  = !dept || rowDept === dept;
+            row.style.display = (matchS && matchD) ? '' : 'none';
+            if (matchS && matchD) visible++;
+        });
+        document.getElementById('totalCount').textContent = visible;
+    }
+
+    // Track behavior
+    fetch('/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'Viewed Employee Records' })
+    });
+</script>
+</body>
+</html>
