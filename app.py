@@ -6,7 +6,7 @@ from modules import init_db, log_attack, log_behavior
 from config import Config
 import sqlite3
 
-app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
+app = Flask(__name__, template_folder='templates')
 app.secret_key = Config.SECRET_KEY
 
 init_db()
