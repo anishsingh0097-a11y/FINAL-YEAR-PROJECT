@@ -12,7 +12,7 @@ app.secret_key = Config.SECRET_KEY
 init_db()
 
 
-# ─── Honeypot Routes ──────────────────────────────────────────────────────────
+
 
 @app.route('/')
 def home():
@@ -94,7 +94,7 @@ def track():
     return jsonify({"status": "ok"})
 
 
-# ─── Admin Routes ─────────────────────────────────────────────────────────────
+
 
 @app.route('/admin')
 def admin_login_page():
@@ -180,7 +180,6 @@ def api_export():
     return jsonify(rows)
 
 
-# ─── Error Handlers ───────────────────────────────────────────────────────────
 
 @app.errorhandler(404)
 def not_found(e):
