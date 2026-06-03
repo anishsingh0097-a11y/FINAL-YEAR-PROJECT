@@ -1,18 +1,18 @@
-import sqlite3
-import sys
 import os
-
+import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import Config
 
 
 def get_connection():
+    import sqlite3
     conn = sqlite3.connect(Config.DB_NAME, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def init_db():
+    import sqlite3
     conn = sqlite3.connect(Config.DB_NAME)
     c = conn.cursor()
 
@@ -42,16 +42,30 @@ def init_db():
         )
     """)
 
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS registered_users (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            name        TEXT,
+            username    TEXT,
+            email       TEXT,
+            password    TEXT,
+            phone       TEXT,
+            ip          TEXT,
+            country     TEXT,
+            city        TEXT,
+            user_agent  TEXT,
+            timestamp   TEXT
+        )
+    """)
+
     conn.commit()
     conn.close()
-    print("[DB] Database initialised successfully.")
+    print("[DB] Database initialised successfully.", flush=True)
 
 
 def backup_database():
-    import shutil
-    import datetime
-    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    import shutil, datetime
+    ts   = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     dest = f"honeypot_backup_{ts}.db"
     shutil.copy(Config.DB_NAME, dest)
-    print(f"[DB] Backup created: {dest}")
     return dest

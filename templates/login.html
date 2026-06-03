@@ -143,7 +143,7 @@
                     </defs>
                 </svg>
             </div>
-            <h1 class="company-name">TechCorp</h1>
+            <h1 class="company-name">HoneyPot</h1>
             <p class="tagline">Enterprise Management Portal</p>
         </div>
 
@@ -151,7 +151,25 @@
             <h2 class="card-title">Sign In</h2>
             <p class="card-sub">Access your secure workspace</p>
 
-            <form method="POST" action="/login">
+            
+    <!-- Success / Failed Alert -->
+    {% if registered %}
+    <div style="background:rgba(0,214,123,.1);border:1px solid rgba(0,214,123,.3);
+                color:#00D67B;padding:12px 16px;border-radius:8px;
+                font-size:14px;margin-bottom:16px;text-align:center;">
+        ✅ Registration successful! Please login now.
+    </div>
+    {% endif %}
+    {% if failed %}
+    <div style="background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);
+                color:#FF4444;padding:12px 16px;border-radius:8px;
+                font-size:14px;margin-bottom:16px;text-align:center;">
+        ❌ Login failed! You are not registered. Please
+        <a href="/register" style="color:#FF4444;font-weight:600;">Register first</a>.
+    </div>
+    {% endif %}
+
+<form method="POST" action="/login">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <div class="input-wrap">
@@ -181,7 +199,15 @@
                 <button type="submit" class="btn-login">Sign In</button>
             </form>
 
-            <div class="divider"><span>or</span></div>
+    
+        <div class="divider"><span>or</span></div>
+        <div style="text-align:center; font-size:14px; color:var(--text-2);">
+            Don't have an account?
+            <a href="/register" style="color:var(--primary); font-weight:600; text-decoration:none;">
+                Register here
+            </a>
+        </div>
+        <!-- old divider replaced -->
             <button class="btn-social">
                 <svg width="18" height="18" viewBox="0 0 20 20">
                     <path fill="#4285F4" d="M19.6 10.23c0-.82-.07-1.43-.21-2.05H10v3.72h5.51c-.11.87-.72 2.18-2.07 3.06l3.01 2.33C18.5 15.68 19.6 13.11 19.6 10.23z"/>
@@ -200,7 +226,7 @@
         </div>
 
         <div class="footer">
-            <p>&copy; 2026 TechCorp Inc. All rights reserved.</p>
+            <p>&copy; 2026 HoneyPot All rights reserved.</p>
             <div class="footer-links">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>

